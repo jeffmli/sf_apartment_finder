@@ -22,17 +22,20 @@ search_criteria:
   max_results_per_site: 50
 
 # Scraper settings
+# Note: Zillow and Apartments.com have strong anti-bot protection and may block requests.
+# If you get 403 errors, disable these scrapers and rely on Craigslist.
+# Craigslist is generally the most reliable scraper.
 scrapers:
   craigslist:
     enabled: true
-    base_url: "https://sfbay.craigslist.org"
+    base_url: "https://sfbay.craigslist.org"  # Change for your area: seattle, newyork, losangeles, etc.
 
   zillow:
-    enabled: true
+    enabled: false  # Often blocked - set to false if getting 403 errors
     base_url: "https://www.zillow.com"
 
   apartments_com:
-    enabled: true
+    enabled: false  # Often blocked - set to false if getting 403 errors
     base_url: "https://www.apartments.com"
 
 # Email settings

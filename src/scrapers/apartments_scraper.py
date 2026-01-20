@@ -1,12 +1,11 @@
 """Apartments.com apartment scraper."""
-import requests
 from bs4 import BeautifulSoup
 from typing import List, Dict, Any
 import logging
-import time
 import re
 import json
 from . import BaseScraper
+from ..utils.request_handler import SmartRequestHandler
 
 logger = logging.getLogger(__name__)
 
@@ -18,15 +17,7 @@ class ApartmentsScraper(BaseScraper):
         """Initialize Apartments.com scraper."""
         super().__init__(search_criteria)
         self.base_url = base_url.rstrip('/')
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
-        }
+        self.request_handler = SmartRequestHandler(base_delay=4.0, max_retries=3)
 
     def _build_search_url(self) -> str:
         """Build Apartments.com search URL based on criteria."""
@@ -94,11 +85,16 @@ class ApartmentsScraper(BaseScraper):
             url = self._build_search_url()
             logger.info(f"Searching Apartments.com: {url}")
 
-            # Add delay to be respectful
-            time.sleep(2)
+            # Use smart request handler with retries
+            response = self.request_handler.get_with_retry(
+                url,
+                referer="https://www.google.com/",
+                timeout=30
+            )
 
-            response = requests.get(url, headers=self.headers, timeout=30)
-            response.raise_for_status()
+            if not response:
+                logger.error("Failed to fetch Apartments.com page after all retries")
+                return self.results
 
             soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -137,11 +133,11 @@ class ApartmentsScraper(BaseScraper):
 
             logger.info(f"Found {len(self.results)} Apartments.com listings")
 
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Network error scraping Apartments.com: {e}")
-            logger.warning("Apartments.com may be blocking requests. Consider using a different approach.")
         except Exception as e:
             logger.error(f"Error scraping Apartments.com: {e}")
+            logger.warning("Apartments.com may be blocking requests. This is common with their anti-scraping measures.")
+        finally:
+            self.request_handler.close()
 
         return self.results
 

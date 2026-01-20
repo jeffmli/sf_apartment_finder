@@ -181,11 +181,36 @@ email:
   - Add delays between runs
   - Check logs for specific errors
 
-### Scraper Errors
+### Scraper Errors & 403 Forbidden
 
-- **Zillow/Apartments.com**: These sites have anti-scraping measures and may not work consistently
-- **Craigslist**: Usually the most reliable scraper
-- **Check logs**: Review `logs/scraper_YYYYMMDD.log` for detailed error messages
+**Important**: Zillow and Apartments.com have sophisticated anti-bot protection that often blocks scrapers with 403 Forbidden errors.
+
+**If you see 403 errors:**
+
+1. **Disable problematic scrapers** - Edit `config.yaml`:
+   ```yaml
+   scrapers:
+     craigslist:
+       enabled: true    # Keep this one - usually works
+     zillow:
+       enabled: false   # Disable if getting 403 errors
+     apartments_com:
+       enabled: false   # Disable if getting 403 errors
+   ```
+
+2. **Rely on Craigslist** - It's the most reliable and scraper-friendly
+3. **Check logs**: Review `logs/scraper_YYYYMMDD.log` for detailed error messages
+
+**Why this happens:**
+- Zillow and Apartments.com detect automated requests
+- They use CAPTCHAs and sophisticated fingerprinting
+- Even with rotating user agents and delays, they may block requests
+- This is normal behavior for these sites
+
+**Alternatives:**
+- Use only Craigslist (usually sufficient for most searches)
+- Manually browse Zillow/Apartments.com instead
+- Consider using official APIs if available (often paid)
 
 ### Cron Job Not Running
 
