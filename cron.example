@@ -1,0 +1,90 @@
+# SF Apartment Finder Cron Job Examples
+#
+# To use:
+# 1. Edit the paths below to match your installation
+# 2. Choose a schedule that works for you
+# 3. Add to your crontab: crontab -e
+# 4. Paste the desired cron job configuration
+#
+# Cron Format:
+# * * * * * command to execute
+# │ │ │ │ │
+# │ │ │ │ └─── day of week (0-7) (Sunday=0 or 7)
+# │ │ │ └────── month (1-12)
+# │ │ └─────────── day of month (1-31)
+# │ └──────────────── hour (0-23)
+# └───────────────────── minute (0-59)
+
+# ============================================
+# CONFIGURATION - UPDATE THESE PATHS
+# ============================================
+PROJECT_DIR=/home/user/sf_apartment_finder
+PYTHON_PATH=/home/user/sf_apartment_finder/venv/bin/python
+
+# ============================================
+# DAILY SCHEDULES
+# ============================================
+
+# Run daily at 9:00 AM
+0 9 * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# Run daily at 6:00 AM
+# 0 6 * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# Run daily at 8:30 AM
+# 30 8 * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# ============================================
+# MULTIPLE TIMES PER DAY
+# ============================================
+
+# Run twice daily (9 AM and 6 PM)
+# 0 9,18 * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# Run three times daily (8 AM, 12 PM, 6 PM)
+# 0 8,12,18 * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# ============================================
+# WEEKDAY ONLY
+# ============================================
+
+# Run Monday-Friday at 9 AM
+# 0 9 * * 1-5 cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# ============================================
+# WEEKLY SCHEDULES
+# ============================================
+
+# Run every Monday at 9 AM
+# 0 9 * * 1 cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# Run every Sunday at 10 AM
+# 0 10 * * 0 cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# ============================================
+# TESTING
+# ============================================
+
+# Run every 5 minutes (for testing only!)
+# */5 * * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# Run every hour at minute 0
+# 0 * * * * cd $PROJECT_DIR && $PYTHON_PATH main.py >> logs/cron.log 2>&1
+
+# ============================================
+# SETUP INSTRUCTIONS
+# ============================================
+#
+# 1. Update PROJECT_DIR and PYTHON_PATH above
+# 2. Choose a schedule from the examples
+# 3. Open crontab editor: crontab -e
+# 4. Copy the desired cron line (uncomment it)
+# 5. Save and exit
+# 6. Verify: crontab -l
+#
+# To view cron logs:
+#   tail -f /home/user/sf_apartment_finder/logs/cron.log
+#
+# To check system cron logs:
+#   grep CRON /var/log/syslog
+#

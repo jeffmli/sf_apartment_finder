@@ -1,0 +1,43 @@
+# Apartment Search Criteria
+search_criteria:
+  # Location settings
+  location: "San Francisco, CA"
+  zip_code: ""  # Optional: specify zip code
+
+  # Price range
+  min_price: 1500
+  max_price: 3500
+
+  # Bedrooms/Bathrooms
+  min_bedrooms: 1
+  max_bedrooms: 2
+  min_bathrooms: 1
+
+  # Property features
+  pet_friendly: false
+  parking: false
+  in_unit_laundry: false
+
+  # Additional filters
+  max_results_per_site: 50
+
+# Scraper settings
+scrapers:
+  craigslist:
+    enabled: true
+    base_url: "https://sfbay.craigslist.org"
+
+  zillow:
+    enabled: true
+    base_url: "https://www.zillow.com"
+
+  apartments_com:
+    enabled: true
+    base_url: "https://www.apartments.com"
+
+# Email settings
+email:
+  subject: "Daily Apartment Listings - {date}"
+  send_time: "09:00"  # Time to send (24-hour format)
+  include_images: true
+  max_listings_in_email: 30
